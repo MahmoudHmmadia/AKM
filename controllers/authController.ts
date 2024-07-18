@@ -21,6 +21,7 @@ import {
   successResponse,
   UPDATED_DATA_MESSAGE,
 } from "../utils/responses";
+
 export async function register(req: Request, res: Response) {
   try {
     const { role, email, name, password } = req.body;
@@ -99,6 +100,7 @@ export async function login(req: Request, res: Response) {
       data = await Account.findOne({ email }).populate("business");
     }
 
+    if (account.role === "ADMIN") data = await Account.findOne({ email });
     return successResponse(res, data);
   } catch (err) {
     return serverErrorResponse(res, err);
