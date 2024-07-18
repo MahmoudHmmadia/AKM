@@ -97,3 +97,7 @@
 ::1 - - [16/Jul/2024:11:59:22 +0000] "POST /api/auth/login HTTP/1.1" 200 787 "-" "PostmanRuntime/7.40.0"
 ::1 - - [16/Jul/2024:12:00:16 +0000] "PATCH /api/accounts HTTP/1.1" 200 924 "-" "PostmanRuntime/7.40.0"
 ::1 - - [16/Jul/2024:12:01:13 +0000] "PATCH /api/accounts HTTP/1.1" 200 944 "-" "PostmanRuntime/7.40.0"
+::1 - - [18/Jul/2024:12:32:20 +0000] "POST /api/auth/login HTTP/1.1" 401 93 "-" "PostmanRuntime/7.40.0"
+::1 - - [18/Jul/2024:12:33:58 +0000] "POST /api/auth/login HTTP/1.1" 401 93 "-" "PostmanRuntime/7.40.0"
+::1 - - [18/Jul/2024:12:34:21 +0000] "POST /api/auth/login HTTP/1.1" 401 93 "-" "PostmanRuntime/7.40.0"
+::1 - - [18/Jul/2024:12:34:50 +0000] "POST /api/auth/login HTTP/1.1" 401 93 "-" "PostmanRuntime/7.40.0"
