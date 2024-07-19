@@ -15,17 +15,9 @@ export async function editCustomer(req: Request, account: any) {
 }
 
 export async function editBusiness(req: Request, account: any) {
-  const {
-    contactNumber,
-    operatingHours,
-    socialLinks,
-    category,
-    address,
-    staff,
-  } = req.body;
+  const { operatingHours, socialLinks, category, address, staff } = req.body;
 
   const business = await Business.findByIdAndUpdate(account.business, {
-    contactNumber,
     operatingHours,
     socialLinks:
       typeof socialLinks == "string" ? JSON.parse(socialLinks) : socialLinks,
