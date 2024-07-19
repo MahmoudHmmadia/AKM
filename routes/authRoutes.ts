@@ -1,8 +1,11 @@
 import { Router } from "express";
 import {
   checkOtp,
+  completeCustomerRegister,
+  customerRegister,
   login,
   logout,
+  newCode,
   register,
   resetPassword,
 } from "../controllers/authController";
@@ -24,6 +27,14 @@ authRoutes.post(
   register
 );
 
+authRoutes.post("/customer-register", customerRegister);
+
+authRoutes.post(
+  "/complete-customer-register",
+  validate(registerUserSchema),
+  completeCustomerRegister
+);
+
 authRoutes.post("/login", login);
 
 authRoutes.post("/logout", logout);
@@ -31,5 +42,7 @@ authRoutes.post("/logout", logout);
 authRoutes.post("/check-otp", checkOtp);
 
 authRoutes.post("/reset-password", isAdmin, resetPassword);
+
+authRoutes.post("new-otp", newCode);
 
 export default authRoutes;

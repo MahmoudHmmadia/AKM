@@ -21,13 +21,13 @@ import {
   successResponse,
   UPDATED_DATA_MESSAGE,
 } from "../utils/responses";
+import { generateCode } from "../utils/utils";
 
 export async function register(req: Request, res: Response) {
   try {
-    const { role, email, name, password } = req.body;
+    const { role, email, name, password, phoneNumber } = req.body;
 
     const isExist = await Account.findOne({ email });
-
     if (isExist) return clientErrorResponse(res, CONFLICT, 409);
 
     const hashedPassword = await hash(password, 10);
@@ -43,13 +43,10 @@ export async function register(req: Request, res: Response) {
       profile: req.file
         ? process.env.IMAGES_URL + "/accounts" + req.file?.filename
         : "",
+      phoneNumber,
     });
 
-    if (role == "CUSTOMER") {
-      const customer = await createCustomer(req, account);
-      account.customer = customer._id;
-      await account.save();
-    } else if (role == "STAFF") {
+    if (role == "STAFF") {
       const staff = await createStaff(req, account);
       account.staff = staff._id;
       await account.save();
@@ -61,6 +58,57 @@ export async function register(req: Request, res: Response) {
     const updatedAccount = await Account.findOne({ email }).populate(
       account.role.toLowerCase()
     );
+
+    return successResponse(res, updatedAccount);
+  } catch (err) {
+    return serverErrorResponse(res, err);
+  }
+}
+
+export async function customerRegister(req: Request, res: Response) {
+  try {
+    const { phoneNumber } = req.body;
+
+    const isExist = await Account.findOne({ phoneNumber });
+
+    if (isExist) return clientErrorResponse(res, CONFLICT, 409);
+
+    const customer = await Account.create({ phoneNumber });
+
+    return successResponse(res, customer);
+  } catch (err) {
+    return serverErrorResponse(res, err);
+  }
+}
+
+export async function completeCustomerRegister(req: Request, res: Response) {
+  try {
+    const { firstName, lastName, email, nickName, id, password } = req.body;
+
+    const account = await Account.findById(id);
+
+    if (!account) return clientErrorResponse(res, NOT_FOUND_DATA_MESSAGE);
+
+    if (!account.active) return clientErrorResponse(res, DES_ACTIVE, 401);
+
+    const hashedPassword = await hash(password, 10);
+
+    await Account.findByIdAndUpdate(id, {
+      firstName,
+      lastName,
+      email,
+      nickName,
+      name: `${firstName} ${lastName}`,
+      password: hashedPassword,
+    });
+
+    const customer = await createCustomer(req, account);
+
+    account.customer = customer._id;
+
+    await account.save();
+
+    const updatedAccount = await Account.findById(id);
 
     return successResponse(res, updatedAccount);
   } catch (err) {
@@ -109,9 +157,9 @@ export async function login(req: Request, res: Response) {
 
 export async function checkOtp(req: Request, res: Response) {
   try {
-    const { code, email } = req.body;
+    const { code, phoneNumber } = req.body;
 
-    const account = await Account.findOne({ email });
+    const account = await Account.findOne({ phoneNumber });
 
     if (!account) {
       return clientErrorResponse(res, NOT_FOUND_DATA_MESSAGE);
@@ -167,6 +215,24 @@ export async function resetPassword(req: Request, res: Response) {
       data: updatedAccount,
       ...UPDATED_DATA_MESSAGE,
     });
+  } catch (err) {
+    return serverErrorResponse(res, err);
+  }
+}
+
+export async function newCode(req: Request, res: Response) {
+  try {
+    const { phoneNumber } = req.body();
+
+    const account = await Account.findOne({ phoneNumber });
+
+    if (!account) return clientErrorResponse(res, NOT_FOUND_DATA_MESSAGE);
+
+    account.code = generateCode(6);
+
+    await account.save();
+
+    return successResponse(res, {});
   } catch (err) {
     return serverErrorResponse(res, err);
   }

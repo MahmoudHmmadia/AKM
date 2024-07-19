@@ -16,8 +16,8 @@ async function seedAdmin() {
   if (!existingAdmin) {
     // Create admin credentials
     const adminCredentials = {
-      email: "admin",
-      password: "admin123",
+      email: "AKM_ADMIN",
+      password: "akm123",
       role: "ADMIN",
       name: "admin",
       phone: "admin",

@@ -18,13 +18,23 @@ import {
 
 export async function editAccount(req: Request, res: Response) {
   try {
-    const { name, password, id, oldPassword } = req.body;
+    const { name, password, id, oldPassword, phoneNumber } = req.body;
 
     const oldAccount = await User.findById(id);
 
     if (!oldAccount) {
       return clientErrorResponse(res, NOT_FOUND_DATA_MESSAGE);
     }
+
+    if (
+      phoneNumber &&
+      ((oldAccount.role != "CUSTOMER" && oldAccount.role != "BUSINESS") ||
+        oldAccount.active)
+    )
+      return clientErrorResponse(res, {
+        en: "you cant change phone number",
+        ar: "لا يمكنك تغيير رقم الهاتف",
+      });
 
     let hashed: string = "";
 
@@ -46,13 +56,16 @@ export async function editAccount(req: Request, res: Response) {
       profile: req.file
         ? `${process.env.IMAGES_URL}/profiles/${req.file.filename}`
         : oldAccount.profile,
+      phoneNumber,
     });
 
     if (oldAccount.role == "CUSTOMER") {
       await editCustomer(req, oldAccount);
-    } else if (oldAccount.role == "BUSINESS") {
+    }
+    if (oldAccount.role == "BUSINESS") {
       await editBusiness(req, oldAccount);
-    } else if (oldAccount.role == "STAFF") {
+    }
+    if (oldAccount.role == "STAFF") {
       await editStaff(req, oldAccount);
     }
 

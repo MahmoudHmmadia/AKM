@@ -12,7 +12,6 @@ const PASSWORD_REGEX =
 
 export const registerUserSchema = yup
   .object({
-    name: yup.string().required().trim(),
     email: yup.string().email().required().trim(),
     role: yup
       .string()

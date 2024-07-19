@@ -15,22 +15,21 @@ const businessSchema = new Schema(
       },
     ],
 
-    contactNumber: {
-      type: String,
-      required: true,
-    },
     operatingHours: {
       type: String,
       default: "",
     },
+
     socialLinks: {
       type: Array,
       default: [],
     },
+
     category: {
       type: String,
       required: true,
     },
+
     address: {
       type: String,
       required: true,

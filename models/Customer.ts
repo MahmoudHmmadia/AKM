@@ -5,11 +5,6 @@ const customerSchema = new Schema(
     account: {
       type: Schema.ObjectId,
       ref: "Account",
-      required: true,
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
     },
     interests: {
       type: Array,

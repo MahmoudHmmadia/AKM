@@ -49,3 +49,50 @@ export function createMulter(dir: string) {
   const upload = multer({ storage });
   return upload;
 }
+
+export function generateCode(length: number) {
+  const arr = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+  ];
+  let code = "";
+
+  for (let index = 0; index < length; index++) {
+    const letter = arr[Math.floor(Math.random() * arr.length)];
+    code += letter;
+  }
+
+  return code;
+}

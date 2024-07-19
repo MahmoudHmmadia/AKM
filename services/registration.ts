@@ -15,12 +15,9 @@ export async function createStaff(req: Request, account: any) {
   return staff;
 }
 export async function createCustomer(req: Request, account: any) {
-  const { phoneNumber, interests, socialLinks } = req.body;
+  const { interests } = req.body;
   const customer = await Customer.create({
-    phoneNumber,
     interests: typeof interests == "string" ? JSON.parse(interests) : interests,
-    socialLinks:
-      typeof socialLinks == "string" ? JSON.parse(socialLinks) : socialLinks,
     account: account._id,
   });
 

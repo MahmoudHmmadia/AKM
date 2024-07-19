@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { clientErrorResponse, serverErrorResponse } from "../utils/responses";
+import {
+  clientErrorResponse,
+  NO_PERMISSIONS_MESSAGE,
+  serverErrorResponse,
+} from "../utils/responses";
 
 export default async function checkFields(
   req: Request,
@@ -12,16 +16,17 @@ export default async function checkFields(
     let requiredFields: string[] = [];
 
     if (role == "CUSTOMER") {
-      requiredFields = ["interests", "phoneNumber", "socialLinks"];
+      return clientErrorResponse(res, NO_PERMISSIONS_MESSAGE, 401);
     } else if (role == "BUSINESS") {
       requiredFields = [
         "category",
         "address",
         "operatingHours",
-        "contactNumber",
-        "socialLinks",
+        "phoneNumber",
+        "email",
+        "name",
       ];
-    } else {
+    } else if (role == "STAFF") {
       requiredFields = ["goals", "business"];
     }
 
